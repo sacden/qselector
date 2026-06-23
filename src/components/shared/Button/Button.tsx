@@ -7,11 +7,12 @@ type Props = {
   title: string;
   onPress?: () => void;
   variant?: ButtonVariant;
+  style?: ViewStyle;
 };
 
-export default function Button({ title, onPress, variant = "default" }: Props) {
+export default function Button({ title, onPress, variant = "default", style }: Props) {
   return (
-    <Pressable style={styles.button} onPress={onPress}>
+    <Pressable style={[styles.button, style]} onPress={onPress}>
       <Text style={[styles.text, { color: textColors[variant] }]}>{title}</Text>
     </Pressable>
   );

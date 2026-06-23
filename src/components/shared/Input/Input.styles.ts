@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 8,
     textAlign: "center",
-    fontSize: 14,
+    fontSize: 12,
     color: COLORS.black,
   },
 });

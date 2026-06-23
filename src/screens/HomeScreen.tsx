@@ -1,23 +1,20 @@
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import Button from "../components/shared/Button/Button";
 import Input from "../components/shared/Input/Input";
+import QuantitySelector from "../components/features/QuantitySelector";
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{
           padding: 10,
           gap: 10,
         }}
       >
-        <View style={{ width: 81 }}>
-          <Input size="md" placeholder="0" keyboardType="numeric" />
-        </View>
-        <View style={{ width: 81, height: 40 }}>
-          <Button title="+10" variant="positive" onPress={() => console.log("Pressed")} />
-        </View>
+        <QuantitySelector initialQuantity={55} />
       </View>
     </SafeAreaView>
   );
