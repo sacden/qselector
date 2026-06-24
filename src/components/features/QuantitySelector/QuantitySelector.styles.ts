@@ -51,4 +51,8 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
+  resultInput: {
+    width: 81,
+    height: 40,
+  },
 });

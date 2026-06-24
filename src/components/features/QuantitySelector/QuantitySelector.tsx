@@ -28,8 +28,9 @@ export default function QuantitySelector({ initialQuantity }: QuantitySelectorPr
   const resultQuantity = initialQuantity + quantityDiff;
 
   const handleDeltaChange = (text: string) => {
-    if (!/^-?\d*$/.test(text)) return;
-    setDelta(text);
+    const normalized = text.startsWith("+") ? text.slice(1) : text;
+    if (!/^-?\d*$/.test(normalized)) return;
+    setDelta(normalized);
   };
 
   const handleResultChange = (text: string) => {
@@ -55,31 +56,24 @@ export default function QuantitySelector({ initialQuantity }: QuantitySelectorPr
       <View style={styles.groupContainer}>
         {QUICK_ACTIONS.negative.map((step) => (
           <View key={step} style={styles.groupItem}>
-            <Button title={formatSigned(step)} variant={step > 0 ? "positive" : "negative"} onPress={() => handleQuickAction(step)} style={styles.buttonStyle} />
+            <Button title={formatSigned(step)} variant="negative" onPress={() => handleQuickAction(step)} style={styles.buttonStyle} />
           </View>
         ))}
 
         <View style={[styles.groupItem, styles.deltaInputContainer]}>
-          <Input
-            variant="plain"
-            style={styles.inputDelta}
-            keyboardType="numbers-and-punctuation"
-            selectTextOnFocus
-            value={quantityDiff > 0 ? `+${quantityDiff}` : `${quantityDiff}`}
-            onChangeText={handleDeltaChange}
-          />
+          <Input variant="plain" style={styles.inputDelta} keyboardType="numbers-and-punctuation" selectTextOnFocus value={delta > 0 ? `+${delta}` : `${delta}`} onChangeText={handleDeltaChange} />
         </View>
 
         {QUICK_ACTIONS.positive.map((step, index) => (
           <View key={step} style={[styles.groupItem, index === QUICK_ACTIONS.positive.length - 1 && styles.groupItemLast]}>
-            <Button title={formatSigned(step)} variant={step > 0 ? "positive" : "negative"} onPress={() => handleQuickAction(step)} style={styles.buttonStyle} />
+            <Button title={formatSigned(step)} variant="positive" onPress={() => handleQuickAction(step)} style={styles.buttonStyle} />
           </View>
         ))}
       </View>
 
       <View style={styles.rowContainer}>
         <Text style={styles.label}>Resulting Quantity:</Text>
-        <Input keyboardType="numeric" value={String(resultQuantity)} onChangeText={handleResultChange} style={{ width: 81, height: 40 }} />
+        <Input keyboardType="numeric" value={String(resultQuantity)} onChangeText={handleResultChange} style={styles.resultInput} />
       </View>
     </View>
   );
