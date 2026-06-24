@@ -68,7 +68,7 @@ export default function QuantitySelector({ initialQuantity, onChange }: Quantity
         ))}
 
         <View style={[styles.groupItem, styles.deltaInputContainer]}>
-          <Input variant="plain" style={styles.inputDelta} keyboardType="numbers-and-punctuation" selectTextOnFocus value={delta > 0 ? `+${delta}` : `${delta}`} onChangeText={handleDeltaChange} />
+          <Input variant="plain" style={styles.inputDelta} keyboardType="numbers-and-punctuation" selectTextOnFocus value={quantityDiff > 0 ? `+${delta}` : `${delta}`} onChangeText={handleDeltaChange} />
         </View>
 
         {QUICK_ACTIONS.positive.map((step, index) => (
