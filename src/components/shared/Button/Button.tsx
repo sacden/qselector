@@ -8,12 +8,33 @@ type Props = {
   onPress?: () => void;
   variant?: ButtonVariant;
   style?: StyleProp<ViewStyle>;
+  disabled?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
 };
 
-export default function Button({ title, onPress, variant = "default", style }: Props) {
+export default function Button({
+  title,
+  onPress,
+  variant = "default",
+  style,
+  disabled = false,
+  accessibilityLabel,
+  accessibilityHint,
+}: Props) {
   return (
-    <Pressable style={[styles.button, style]} onPress={onPress}>
-      <Text style={[styles.text, { color: textColors[variant] }]}>{title}</Text>
+    <Pressable
+      style={[styles.button, style]}
+      onPress={onPress}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel ?? title}
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{ disabled }}
+    >
+      <Text style={[styles.text, { color: textColors[variant] }]} importantForAccessibility="no-hide-descendants">
+        {title}
+      </Text>
     </Pressable>
   );
 }

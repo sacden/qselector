@@ -22,6 +22,10 @@ const parseDelta = (value: string): number => {
 
 const formatSigned = (value: number) => (value > 0 ? `+${value}` : `${value}`);
 
+const QUICK_ACTION_HINT = "Updates the quantity change";
+
+const getQuickActionLabel = (step: number) => (step > 0 ? `Add ${step}` : `Subtract ${Math.abs(step)}`);
+
 function GridCell({ children, bordered, isLast }: { children?: ReactNode; bordered?: boolean; isLast?: boolean }) {
   return (
     <View style={[styles.gridCell, bordered && styles.borderedCell, bordered && isLast && styles.borderedCellLast]}>
@@ -83,14 +87,28 @@ export default function QuantitySelector({ initialQuantity, onChange }: Quantity
       <LabelRow
         label="Current Quantity:"
         input={
-          <Input {...quantityInputProps} editable={false} value={String(initialQuantity)} testID="current-quantity-input" />
+          <Input
+            {...quantityInputProps}
+            editable={false}
+            value={String(initialQuantity)}
+            testID="current-quantity-input"
+            accessibilityLabel="Current quantity"
+            accessibilityState={{ disabled: true }}
+          />
         }
       />
 
       <View style={[styles.gridRow, styles.borderedRow]}>
         {QUICK_ACTIONS.negative.map((step) => (
           <GridCell key={step} bordered>
-            <Button title={formatSigned(step)} variant="negative" onPress={() => handleQuickAction(step)} style={styles.buttonStyle} />
+            <Button
+              title={formatSigned(step)}
+              variant="negative"
+              onPress={() => handleQuickAction(step)}
+              style={styles.buttonStyle}
+              accessibilityLabel={getQuickActionLabel(step)}
+              accessibilityHint={QUICK_ACTION_HINT}
+            />
           </GridCell>
         ))}
 
@@ -101,12 +119,21 @@ export default function QuantitySelector({ initialQuantity, onChange }: Quantity
             selectTextOnFocus
             value={quantityDiff > 0 ? `+${delta}` : `${delta}`}
             onChangeText={handleDeltaChange}
+            accessibilityLabel="Quantity change"
+            accessibilityHint="Enter how much to add or subtract"
           />
         </GridCell>
 
         {QUICK_ACTIONS.positive.map((step, index) => (
           <GridCell key={step} bordered isLast={index === QUICK_ACTIONS.positive.length - 1}>
-            <Button title={formatSigned(step)} variant="positive" onPress={() => handleQuickAction(step)} style={styles.buttonStyle} />
+            <Button
+              title={formatSigned(step)}
+              variant="positive"
+              onPress={() => handleQuickAction(step)}
+              style={styles.buttonStyle}
+              accessibilityLabel={getQuickActionLabel(step)}
+              accessibilityHint={QUICK_ACTION_HINT}
+            />
           </GridCell>
         ))}
       </View>
@@ -121,6 +148,8 @@ export default function QuantitySelector({ initialQuantity, onChange }: Quantity
             value={String(resultQuantity)}
             onChangeText={handleResultChange}
             testID="result-input"
+            accessibilityLabel="Resulting quantity"
+            accessibilityHint="Enter the final quantity"
           />
         }
       />
