@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { type ReactNode, useState } from "react";
 import { Text, View } from "react-native";
 import { styles } from "./QuantitySelector.styles";
 import Button from "../../shared/Button/Button";
@@ -21,6 +21,26 @@ const parseDelta = (value: string): number => {
 };
 
 const formatSigned = (value: number) => (value > 0 ? `+${value}` : `${value}`);
+
+function GridCell({ children, bordered, isLast }: { children?: ReactNode; bordered?: boolean; isLast?: boolean }) {
+  return (
+    <View style={[styles.gridCell, bordered && styles.borderedCell, bordered && isLast && styles.borderedCellLast]}>
+      {children}
+    </View>
+  );
+}
+
+function LabelRow({ label, input }: { label: string; input: ReactNode }) {
+  return (
+    <View style={[styles.gridRow, styles.labelRow]}>
+      <View style={styles.labelSpan}>
+        <Text style={styles.label}>{label}</Text>
+      </View>
+      <View style={styles.inputColumn}>{input}</View>
+      <View style={styles.labelSpan} />
+    </View>
+  );
+}
 
 export default function QuantitySelector({ initialQuantity, onChange }: QuantitySelectorProps) {
   const [delta, setDelta] = useState("0");
@@ -53,35 +73,57 @@ export default function QuantitySelector({ initialQuantity, onChange }: Quantity
     updateDelta(String(quantityDiff + step));
   };
 
+  const quantityInputProps = {
+    variant: "plain" as const,
+    style: styles.quantityInput,
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.rowContainer}>
-        <Text style={styles.label}>Current Quantity:</Text>
-        <Text style={styles.current}>{initialQuantity}</Text>
-      </View>
+      <LabelRow
+        label="Current Quantity:"
+        input={
+          <Input {...quantityInputProps} editable={false} value={String(initialQuantity)} testID="current-quantity-input" />
+        }
+      />
 
-      <View style={styles.groupContainer}>
+      <View style={[styles.gridRow, styles.borderedRow]}>
         {QUICK_ACTIONS.negative.map((step) => (
-          <View key={step} style={styles.groupItem}>
+          <GridCell key={step} bordered>
             <Button title={formatSigned(step)} variant="negative" onPress={() => handleQuickAction(step)} style={styles.buttonStyle} />
-          </View>
+          </GridCell>
         ))}
 
-        <View style={[styles.groupItem, styles.deltaInputContainer]}>
-          <Input variant="plain" style={styles.inputDelta} keyboardType="numbers-and-punctuation" selectTextOnFocus value={quantityDiff > 0 ? `+${delta}` : `${delta}`} onChangeText={handleDeltaChange} />
-        </View>
+        <GridCell bordered>
+          <Input
+            {...quantityInputProps}
+            keyboardType="numbers-and-punctuation"
+            selectTextOnFocus
+            value={quantityDiff > 0 ? `+${delta}` : `${delta}`}
+            onChangeText={handleDeltaChange}
+          />
+        </GridCell>
 
         {QUICK_ACTIONS.positive.map((step, index) => (
-          <View key={step} style={[styles.groupItem, index === QUICK_ACTIONS.positive.length - 1 && styles.groupItemLast]}>
+          <GridCell key={step} bordered isLast={index === QUICK_ACTIONS.positive.length - 1}>
             <Button title={formatSigned(step)} variant="positive" onPress={() => handleQuickAction(step)} style={styles.buttonStyle} />
-          </View>
+          </GridCell>
         ))}
       </View>
 
-      <View style={styles.rowContainer}>
-        <Text style={styles.label}>Resulting Quantity:</Text>
-        <Input keyboardType="numeric" value={String(resultQuantity)} onChangeText={handleResultChange} style={styles.resultInput} />
-      </View>
+      <LabelRow
+        label="Resulting Quantity:"
+        input={
+          <Input
+            {...quantityInputProps}
+            variant="outlined"
+            keyboardType="numeric"
+            value={String(resultQuantity)}
+            onChangeText={handleResultChange}
+            testID="result-input"
+          />
+        }
+      />
     </View>
   );
 }

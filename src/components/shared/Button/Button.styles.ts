@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { COLORS } from "../../../constants/colors";
+import { typography } from "../../../constants/typography";
 
 export const styles = StyleSheet.create({
   button: {
@@ -10,6 +11,6 @@ export const styles = StyleSheet.create({
 
   text: {
     fontSize: 12,
-    fontWeight: "500",
+    ...typography.regular,
   },
 });

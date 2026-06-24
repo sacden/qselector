@@ -14,7 +14,7 @@ function getDeltaInput() {
 }
 
 function getResultInput() {
-  return screen.getByDisplayValue(String(INITIAL_QUANTITY));
+  return screen.getByTestId("result-input");
 }
 
 describe("QuantitySelector", () => {

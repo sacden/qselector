@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { COLORS } from "../../../constants/colors";
+import { typography } from "../../../constants/typography";
 
 export const styles = StyleSheet.create({
   input: {
@@ -7,6 +8,7 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 12,
     color: COLORS.black,
+    ...typography.regular,
   },
 });
 
@@ -17,8 +19,9 @@ export const variantStyles = {
   outlined: {
     borderWidth: 1,
     borderRadius: 6,
-    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderColor: COLORS.lightGray,
     backgroundColor: "transparent",
+    ...typography.bold,
   },
 
   plain: {

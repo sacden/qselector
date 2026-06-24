@@ -13,6 +13,9 @@
         "backgroundColor": "#E6F4FE"
       },
       "predictiveBackGestureEnabled": false
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
