@@ -3,22 +3,6 @@ import { COLORS } from "../../../constants/colors";
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.gray,
-  },
-
-  positiveText: {
-    color: COLORS.green,
-  },
-
-  negativeText: {
-    color: COLORS.red,
-  },
-
-  text: {
-    color: COLORS.black,
-  },
-
-  container: {
     padding: 20,
     gap: 16,
   },
@@ -50,7 +34,13 @@ export const styles = StyleSheet.create({
     borderWidth: 0,
     paddingVertical: 13,
   },
+  deltaInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   inputDelta: {
+    flex: 1,
     fontSize: 12,
     textAlign: "center",
     padding: 0,

@@ -13,39 +13,37 @@ const QUICK_ACTIONS = {
   positive: [1, 5, 10],
 };
 
-export default function QuantitySelector({ initialQuantity }: QuantitySelectorProps) {
-  const [quantityDiff, setquantityDiff] = useState(0);
-  const resultQuantity = initialQuantity + quantityDiff;
-  const formattedquantityDiff = quantityDiff > 0 ? `+${quantityDiff}` : `${quantityDiff}`;
+const parseDelta = (value: string): number => {
+  if (value === "" || value === "-") return 0;
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
 
-  const handlequantityDiffChange = (value: string) => {
-    const cleaned = value.replace(/^[-]?\d*$/g, "");
-    if (cleaned === "" || cleaned === "-") {
-      setquantityDiff(0);
-      return;
-    }
-    const parsed = Number(cleaned);
-    if (!Number.isNaN(parsed)) {
-      setquantityDiff(parsed);
-    }
+const formatSigned = (value: number) => (value > 0 ? `+${value}` : `${value}`);
+
+export default function QuantitySelector({ initialQuantity }: QuantitySelectorProps) {
+  const [delta, setDelta] = useState("0");
+
+  const quantityDiff = parseDelta(delta);
+  const resultQuantity = initialQuantity + quantityDiff;
+
+  const handleDeltaChange = (text: string) => {
+    if (!/^-?\d*$/.test(text)) return;
+    setDelta(text);
   };
 
-  const handleResultChange = (value: string) => {
-    if (value === "") {
-      setquantityDiff(-initialQuantity);
+  const handleResultChange = (text: string) => {
+    if (text === "") {
+      setDelta(String(-initialQuantity));
       return;
     }
-    const parsed = Number(value);
-    if (!Number.isNaN(parsed)) {
-      setquantityDiff(parsed - initialQuantity);
-    }
+    if (!/^\d+$/.test(text)) return;
+    setDelta(String(Number(text) - initialQuantity));
   };
 
   const handleQuickAction = (step: number) => {
-    setquantityDiff((prev) => prev + step);
+    setDelta(String(quantityDiff + step));
   };
-
-  const formatSigned = (value: number) => (value > 0 ? `+${value}` : `${value}`);
 
   return (
     <View style={styles.container}>
@@ -61,16 +59,24 @@ export default function QuantitySelector({ initialQuantity }: QuantitySelectorPr
           </View>
         ))}
 
-        <View style={styles.groupItem}>
-          <Input variant="plain" style={styles.inputquantityDiff} keyboardType="numeric" value={formattedquantityDiff} onChangeText={handlequantityDiffChange} />
+        <View style={[styles.groupItem, styles.deltaInputContainer]}>
+          <Input
+            variant="plain"
+            style={styles.inputDelta}
+            keyboardType="numbers-and-punctuation"
+            selectTextOnFocus
+            value={quantityDiff > 0 ? `+${quantityDiff}` : `${quantityDiff}`}
+            onChangeText={handleDeltaChange}
+          />
         </View>
 
         {QUICK_ACTIONS.positive.map((step, index) => (
-          <View key={step} style={[styles.groupItem, index === QUICK_ACTIONS.negative.length - 1 && styles.groupItemLast]}>
+          <View key={step} style={[styles.groupItem, index === QUICK_ACTIONS.positive.length - 1 && styles.groupItemLast]}>
             <Button title={formatSigned(step)} variant={step > 0 ? "positive" : "negative"} onPress={() => handleQuickAction(step)} style={styles.buttonStyle} />
           </View>
         ))}
       </View>
+
       <View style={styles.rowContainer}>
         <Text style={styles.label}>Resulting Quantity:</Text>
         <Input keyboardType="numeric" value={String(resultQuantity)} onChangeText={handleResultChange} style={{ width: 81, height: 40 }} />
