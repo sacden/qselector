@@ -47,6 +47,7 @@ function LabelRow({ label, input }: { label: string; input: ReactNode }) {
 }
 
 export default function QuantitySelector({ initialQuantity, onChange }: QuantitySelectorProps) {
+  // String state keeps partial input ("", "-") valid while typing; quantityDiff is derived via parseDelta.
   const [delta, setDelta] = useState("0");
 
   const quantityDiff = parseDelta(delta);

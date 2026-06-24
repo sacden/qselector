@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
     width: "100%",
   },
   labelRow: {
+    // Offsets bordered button row so center inputs align vertically across all three rows.
     marginHorizontal: 1,
   },
   gridCell: {
