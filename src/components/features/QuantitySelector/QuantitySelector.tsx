@@ -6,6 +6,7 @@ import Input from "../../shared/Input/Input";
 
 interface QuantitySelectorProps {
   initialQuantity: number;
+  onChange?: (resultQuantity: number, delta: number) => void;
 }
 
 const QUICK_ACTIONS = {
@@ -21,29 +22,35 @@ const parseDelta = (value: string): number => {
 
 const formatSigned = (value: number) => (value > 0 ? `+${value}` : `${value}`);
 
-export default function QuantitySelector({ initialQuantity }: QuantitySelectorProps) {
+export default function QuantitySelector({ initialQuantity, onChange }: QuantitySelectorProps) {
   const [delta, setDelta] = useState("0");
 
   const quantityDiff = parseDelta(delta);
   const resultQuantity = initialQuantity + quantityDiff;
 
+  const updateDelta = (nextDelta: string) => {
+    setDelta(nextDelta);
+    const nextDiff = parseDelta(nextDelta);
+    onChange?.(initialQuantity + nextDiff, nextDiff);
+  };
+
   const handleDeltaChange = (text: string) => {
     const normalized = text.startsWith("+") ? text.slice(1) : text;
     if (!/^-?\d*$/.test(normalized)) return;
-    setDelta(normalized);
+    updateDelta(normalized);
   };
 
   const handleResultChange = (text: string) => {
     if (text === "") {
-      setDelta(String(-initialQuantity));
+      updateDelta(String(-initialQuantity));
       return;
     }
     if (!/^\d+$/.test(text)) return;
-    setDelta(String(Number(text) - initialQuantity));
+    updateDelta(String(Number(text) - initialQuantity));
   };
 
   const handleQuickAction = (step: number) => {
-    setDelta(String(quantityDiff + step));
+    updateDelta(String(quantityDiff + step));
   };
 
   return (
